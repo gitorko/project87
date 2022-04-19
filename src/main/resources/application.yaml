@@ -3,7 +3,8 @@ spring:
     banner-mode: "off"
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/test-db
+    host: localhost
+    url: jdbc:postgresql://${spring.datasource.host}:5432/test-db
     username: test
     password: test@123
   jpa:
