@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  db-server:
+    image: postgres:9.6.10
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test@123
+      - POSTGRES_DB=test-db
+    ports:
+      - '5432:5432'
+    volumes:
+      - /tmp/pgdata87:/var/lib/postgresql/data
+  web-server:
+    image: gitorko/project87:1.0.0
+    ports:
+      - "8080:8080"
+    links:
+      - db-server
+    depends_on:
+      db-server:
+        condition: service_started

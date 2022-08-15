@@ -1,0 +1,7 @@
+<clr-alert [clrAlertType]="alertType" [(clrAlertClosed)]="!openAlert" (clrAlertClosedChange)="onAlertClosedChange($event)">
+  <clr-alert-item>
+    <span class="alert-text">
+      {{ alertMessage }}
+    </span>
+  </clr-alert-item>
+</clr-alert>

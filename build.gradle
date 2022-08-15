@@ -1,0 +1,54 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.2'
+    id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+    id 'java'
+}
+
+group = 'com.demo'
+version = '1.0.0'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "com.google.zxing:core:3.5.0"
+    implementation 'com.google.zxing:javase:3.5.0'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+
+task buildUi(type: Exec) {
+    workingDir "${projectDir}/ui"
+    commandLine 'yarn','build'
+    doLast {
+        println "UI build completed!"
+    }
+}
+
+task cleanBuild(type: GradleBuild) {
+    tasks = ['clean', 'buildUi', 'build']
+}
+
+bootJar {
+    from('./ui/dist/ui') {
+        into 'public'
+    }
+}
+
+bootRun {
+    systemProperties = System.properties
+}
+

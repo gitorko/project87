@@ -1,0 +1,65 @@
+<div class="content-container">
+  <div class="content-area">
+    <div class="clr-row">
+      <div class="clr-col-12">
+        <div class="alert-section">
+          <app-alert></app-alert>
+        </div>
+        <h2 style="text-align: center">Tickets</h2>
+        <clr-datagrid [(clrDgSelected)]="selected">
+          <clr-dg-column [clrDgField]="'seatNumber'">Seat Number</clr-dg-column>
+          <clr-dg-column [clrDgField]="'eventDate'">Date</clr-dg-column>
+          <clr-dg-column [clrDgField]="'price'">Price</clr-dg-column>
+          <clr-dg-column [clrDgField]="'booked'">Status</clr-dg-column>
+          <clr-dg-column [clrDgField]="'bookedBy'">Booked By</clr-dg-column>
+          <clr-dg-column>QR Code</clr-dg-column>
+          <clr-dg-column [clrDgField]="'entered'">Entered</clr-dg-column>
+          <!-- structural directive -->
+          <clr-dg-row clr-dg-row *clrDgItems="let ticket of tickets" [clrDgItem]="ticket"
+                      [clrDgSelectable]="getSeatStatus(ticket) === 'AVAILABLE'">
+            <clr-dg-placeholder class="content-center">No Tickets!</clr-dg-placeholder>
+            <clr-dg-cell>{{ticket.seatNumber}}</clr-dg-cell>
+            <clr-dg-cell>{{ticket.eventDate}}</clr-dg-cell>
+            <clr-dg-cell>{{ticket.price}}</clr-dg-cell>
+            <clr-dg-cell>{{getSeatStatus(ticket)}}</clr-dg-cell>
+            <clr-dg-cell>{{ticket.bookedBy}}</clr-dg-cell>
+            <clr-dg-cell >
+              <a *ngIf="getSeatStatus(ticket) === 'BOOKED'" href="/api/qrcode/{{ticket.entryToken}}"
+                 target="_blank">Ticket</a>
+            </clr-dg-cell>
+            <clr-dg-cell>
+              <cds-icon *ngIf="ticket.entered" shape="success-standard" status="success" title="Admitted"
+                        class="action-icon" solid></cds-icon>
+            </clr-dg-cell>
+          </clr-dg-row>
+
+          <clr-dg-footer>
+            <clr-dg-pagination #pagination [clrDgPageSize]="10">
+              <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Tickets per page</clr-dg-page-size>
+              {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{pagination.totalItems}} tickets
+            </clr-dg-pagination>
+          </clr-dg-footer>
+        </clr-datagrid>
+        <br/>
+        <button type="submit" class="btn btn-primary btn-block" (click)="holdBooking()"
+                *ngIf="selected.length > 0">Book
+          Ticket
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Pay Modal-->
+<clr-modal [(clrModalOpen)]="payModal" [clrModalClosable]="false">
+  <h3 class="modal-title">Pay & Confirm</h3>
+  <div class="modal-body">
+    <p>You have 30 Secs to complete the payment!</p>
+    <p *ngFor="let item of selected;index as i">{{i + 1}}. {{item.seatNumber}}</p>
+    <p>Total Amount: {{getTotal()}} Rs.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="cancelBooking()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="confirmBooking()">Confirm</button>
+  </div>
+</clr-modal>
