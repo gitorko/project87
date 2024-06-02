@@ -1,6 +1,6 @@
 # Project 87
 
-Ticket Booking Application with QR code tickets.
+Ticket Booking Application with QR code tickets
 
 [https://gitorko.github.io/ticket-booking-system/](https://gitorko.github.io/ticket-booking-system/)
 
